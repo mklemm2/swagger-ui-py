@@ -42,6 +42,7 @@
         url: "{{ config_url }}",
         dom_id: '#swagger-ui',
         deepLinking: true,
+        oauth2RedirectUrl: "{{ url_prefix }}/oauth2-redirect.html",
         presets: [
           SwaggerUIBundle.presets.apis,
           SwaggerUIStandalonePreset

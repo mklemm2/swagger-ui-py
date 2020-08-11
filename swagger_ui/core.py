@@ -49,6 +49,9 @@ class Interface(object):
         return self._env.get_template('editor.html').render(
             url_prefix=self._url_prefix, title=self._title, config_url=self._uri('/swagger.json')
         )
+    @property
+    def redirect_html(self):
+        return self._env.get_template('oauth2-redirect.html').render(client_id=self._client_id)
 
     def _load_config(self, config_str):
         try:
@@ -152,10 +155,12 @@ class Interface(object):
 
         async def swagger_config_handler(request):
             return web.json_response(self.get_config(request.host))
+        async def redirect_handler(request):
+            return web.Response(text=self.redirect_html, content_type='text/html')
 
         self._app.router.add_get(self._uri(), swagger_doc_handler)
         self._app.router.add_get(self._uri('/'), swagger_doc_handler)
-
+        self._app.router.add_get(self._uri('/oauth2-redirect.html'), redirect_handler)
         if self._editor:
             self._app.router.add_get(self._uri('/editor'), swagger_editor_handler)
 
